@@ -1,4 +1,4 @@
-import { BackgroundRemover } from '@/lib/background-remover';
+import { type BackgroundRemover } from '@/lib/background-remover';
 import { createContext, useContext } from 'react';
 
 export const BackgroundRemoverContext = createContext<BackgroundRemover | undefined>(undefined);

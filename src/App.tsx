@@ -1,5 +1,5 @@
 import { useState, type JSX } from 'react';
-import { BackgroundRemover, createImglyBackgroundRemover } from './lib/background-remover';
+import { type BackgroundRemover, createImglyBackgroundRemover } from './lib/background-remover';
 import { BackgroundRemoverContext } from './contexts/background-remover-context';
 import { Home } from './pages/home';
 
