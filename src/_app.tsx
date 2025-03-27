@@ -3,7 +3,7 @@ import { type BackgroundRemover, createImglyBackgroundRemover } from './lib/back
 import { BackgroundRemoverContext } from './contexts/background-remover-context';
 import { Home } from './pages/home';
 
-function App(): JSX.Element {
+export function App(): JSX.Element {
   const [backgroundRemover] = useState<BackgroundRemover>(() => {
     return createImglyBackgroundRemover();
   });
@@ -14,5 +14,3 @@ function App(): JSX.Element {
     </BackgroundRemoverContext.Provider>
   );
 }
-
-export default App;
