@@ -1,10 +1,17 @@
-import type { JSX } from 'react';
+import { useState, type JSX } from 'react';
+import { BackgroundRemover, createImglyBackgroundRemover } from './lib/background-remover';
+import { BackgroundRemoverContext } from './contexts/background-remover-context';
+import { Home } from './pages/home';
 
 function App(): JSX.Element {
+  const [backgroundRemover] = useState<BackgroundRemover>(() => {
+    return createImglyBackgroundRemover();
+  });
+
   return (
-    <div className="w-screen h-screen bg-amber-300 flex justify-center items-center">
-      <p className="text-white text-4xl">Welcome!</p>
-    </div>
+    <BackgroundRemoverContext.Provider value={backgroundRemover}>
+      <Home />
+    </BackgroundRemoverContext.Provider>
   );
 }
 
