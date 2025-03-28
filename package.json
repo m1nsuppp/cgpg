@@ -12,13 +12,16 @@
   "dependencies": {
     "@imgly/background-removal": "^1.6.0",
     "@tailwindcss/vite": "^4.0.14",
+    "@tanstack/react-query": "^5.70.0",
     "clsx": "^2.1.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-dropzone": "^14.3.8",
     "tailwindcss": "^4.0.14"
   },
   "devDependencies": {
     "@m1nsuppp/prettier-config": "^0.0.2",
+    "@tanstack/react-query-devtools": "^5.70.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
