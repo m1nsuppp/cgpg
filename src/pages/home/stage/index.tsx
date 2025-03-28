@@ -66,7 +66,7 @@ function StageWrapper({
   return (
     <div
       ref={parentRef}
-      className={cn('w-full h-full p-12', 'flex justify-center items-center')}
+      className={cn('flex justify-center items-center', 'w-full h-full', 'p-12')}
     >
       <div
         ref={targetRef}

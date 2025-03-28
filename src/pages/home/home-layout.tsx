@@ -7,7 +7,7 @@ interface HomeLayoutProps {
 
 export function HomeLayout({ children }: HomeLayoutProps): JSX.Element {
   return (
-    <div className={cn('w-screen h-screen flex justify-center items-center', 'bg-gray-300')}>
+    <div className={cn('flex justify-center items-center', 'w-screen h-screen', 'bg-gray-300')}>
       {children}
     </div>
   );
