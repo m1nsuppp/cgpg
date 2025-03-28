@@ -4,6 +4,7 @@ import { useDPR } from '../dpr-context';
 import { Dropzone } from './dropzone';
 import { useBackgroundRemover } from '../background-remover-context';
 import { useMutation } from '@tanstack/react-query';
+import { loadImage } from '@/lib/utils/load-image';
 
 export function Stage(): JSX.Element {
   const dpr = useDPR();
@@ -19,24 +20,26 @@ export function Stage(): JSX.Element {
       onDrop={(imageFile) => {
         removeBackground(imageFile, {
           onSuccess: (backgroundRemoved) => {
-            const { current: canvas } = canvasRef;
-            if (canvas === null) {
-              return;
-            }
+            void (async () => {
+              const { current: canvas } = canvasRef;
+              if (canvas === null) {
+                return;
+              }
 
-            const image = new Image();
-            image.src = URL.createObjectURL(backgroundRemoved);
-            image.onload = () => {
               const ctx = canvas.getContext('2d');
               if (ctx === null) {
                 return;
               }
 
-              const dx = 0;
-              const dy = 0;
-
+              const url = URL.createObjectURL(backgroundRemoved);
+              const image = await loadImage(url);
+              const halfFactor = 2;
+              const dx = canvas.width / halfFactor - image.width / halfFactor;
+              const dy = canvas.height / halfFactor - image.height / halfFactor;
               ctx.drawImage(image, dx, dy, image.width, image.height);
-            };
+
+              URL.revokeObjectURL(url);
+            })();
           },
         });
       }}

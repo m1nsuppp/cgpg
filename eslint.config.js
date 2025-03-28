@@ -11,6 +11,8 @@ export default [
   {
     rules: {
       '@typescript-eslint/triple-slash-reference': 'off',
+      // https://github.com/eslint-community/eslint-plugin-promise/blob/main/docs/rules/avoid-new.md
+      'promise/avoid-new': 'off',
     },
     files: ['**/*.ts', '**/*.tsx'],
   },
