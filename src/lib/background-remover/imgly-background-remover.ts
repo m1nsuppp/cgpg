@@ -4,7 +4,9 @@ import { removeBackground as imglyRemoveBackground } from '@imgly/background-rem
 export function createImglyBackgroundRemover(): BackgroundRemover {
   return {
     async removeBackground(image) {
-      return imglyRemoveBackground(image);
+      const result = await imglyRemoveBackground(image);
+
+      return result;
     },
   };
 }

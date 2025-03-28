@@ -4,9 +4,7 @@ import { BackgroundRemoverContext } from './contexts/background-remover-context'
 import { Home } from './pages/home';
 
 export function App(): JSX.Element {
-  const [backgroundRemover] = useState<BackgroundRemover>(() => {
-    return createImglyBackgroundRemover();
-  });
+  const [backgroundRemover] = useState<BackgroundRemover>(() => createImglyBackgroundRemover());
 
   return (
     <BackgroundRemoverContext.Provider value={backgroundRemover}>

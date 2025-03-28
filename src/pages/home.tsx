@@ -1,6 +1,8 @@
 import { useState, type JSX } from 'react';
 import { useBackgroundRemover } from '../contexts/background-remover-context';
 
+const NO_FILES_SELECTED = 0;
+
 export function Home(): JSX.Element {
   const backgroundRemover = useBackgroundRemover();
 
@@ -14,12 +16,17 @@ export function Home(): JSX.Element {
         type="file"
         accept="image/*"
         onChange={(e) => {
-          if (e.target.files) {
-            if (e.target.files.length === 0) {
+          if (e.target.files !== null) {
+            if (e.target.files.length === NO_FILES_SELECTED) {
               return;
             }
 
-            const file = e.target.files[0];
+            const firstIndex = 0;
+            const {
+              target: {
+                files: { [firstIndex]: file },
+              },
+            } = e;
 
             setIsLoading(true);
             backgroundRemover
@@ -27,8 +34,10 @@ export function Home(): JSX.Element {
               .then((result) => {
                 setBackgroundRemoved(result);
               })
-              .catch((error) => {
-                console.error(error);
+              .catch((error: unknown) => {
+                if (error instanceof Error) {
+                  throw new Error(error.message);
+                }
               })
               .finally(() => {
                 setIsLoading(false);
@@ -37,7 +46,7 @@ export function Home(): JSX.Element {
         }}
       />
 
-      {backgroundRemoved && (
+      {backgroundRemoved !== null && (
         <img
           src={URL.createObjectURL(backgroundRemoved)}
           alt="Background removed"

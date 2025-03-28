@@ -1,3 +1,5 @@
-export interface BackgroundRemover {
-  removeBackground(image: Blob): Promise<Blob>;
+interface BackgroundRemover {
+  removeBackground: (image: Blob) => Promise<Blob>;
 }
+
+export { type BackgroundRemover };

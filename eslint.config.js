@@ -6,7 +6,7 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 export default [
   {
     ...love,
-    files: ['**/*.ts', '**/*.tsx'],
+    files: ['src/**/*.ts', 'src/**/*.tsx'],
   },
   {
     rules: {

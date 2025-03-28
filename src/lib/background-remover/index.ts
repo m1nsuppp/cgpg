@@ -1,2 +1,2 @@
 export * from './imgly-background-remover';
-export * from './background-remover.interface';
+export type * from './background-remover.interface';
