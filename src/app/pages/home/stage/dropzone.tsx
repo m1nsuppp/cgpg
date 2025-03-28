@@ -4,9 +4,14 @@ import { useDropzone } from 'react-dropzone';
 interface DropzoneProps {
   onDrop: (file: File) => void;
   children: (state: { isDragActive: boolean }) => ReactNode;
+  disabled?: boolean;
 }
 
-export function Dropzone({ onDrop: handleDrop, children }: DropzoneProps): JSX.Element {
+export function Dropzone({
+  onDrop: handleDrop,
+  children,
+  disabled = false,
+}: DropzoneProps): JSX.Element {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: (files) => {
       const [file] = files;
@@ -14,6 +19,7 @@ export function Dropzone({ onDrop: handleDrop, children }: DropzoneProps): JSX.E
     },
     noClick: true,
     noKeyboard: true,
+    disabled,
   });
 
   return (
