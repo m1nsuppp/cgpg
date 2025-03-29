@@ -1,10 +1,11 @@
 import { cn } from '@/lib/utils/cn';
-import { type PropsWithChildren, useCallback, useRef, type JSX } from 'react';
+import { type PropsWithChildren, type JSX, useCallback, useRef, useState, useEffect } from 'react';
 import { useDPR } from '../dpr-context';
 import { Dropzone } from './dropzone';
 import { useBackgroundRemover } from '../background-remover-context';
-import { useMutation } from '@tanstack/react-query';
-import { loadImage } from '@/lib/utils/load-image';
+import { useMutation, useQueries } from '@tanstack/react-query';
+import { loadHTMLImageElement } from '@/lib/utils/image';
+import { Upload as UploadIcon, Loader } from 'lucide-react';
 
 export function Stage(): JSX.Element {
   const dpr = useDPR();
@@ -15,31 +16,63 @@ export function Stage(): JSX.Element {
     mutationFn: backgroundRemover.removeBackground,
   });
 
+  const [imageURLs, setImageURLs] = useState<string[]>([]);
+
+  const { htmlImageElements, isLoadHTMLImageElementPending } = useQueries({
+    queries: imageURLs.map((imageURL) => ({
+      queryKey: ['imageElement', imageURL],
+      queryFn: async () => await loadHTMLImageElement(imageURL),
+      staleTime: Infinity,
+    })),
+    combine: (queryResults) => ({
+      htmlImageElements: queryResults.map((queryResult) => queryResult.data),
+      isLoadHTMLImageElementPending: queryResults.some((queryResult) => queryResult.isPending),
+    }),
+  });
+
+  const drawImages = (context: CanvasRenderingContext2D, images: HTMLImageElement[]): void => {
+    images.forEach((htmlImageElement) => {
+      const halfFactor = 2;
+      const dx = context.canvas.width / halfFactor - htmlImageElement.width / halfFactor;
+      const dy = context.canvas.height / halfFactor - htmlImageElement.height / halfFactor;
+      context.drawImage(htmlImageElement, dx, dy);
+    });
+  };
+
+  useEffect(() => {
+    const { current: canvas } = canvasRef;
+    if (canvas === null) {
+      return;
+    }
+
+    const context = canvas.getContext('2d');
+    if (context === null) {
+      return;
+    }
+
+    drawImages(
+      context,
+      htmlImageElements.filter((htmlImageElement) => htmlImageElement !== undefined),
+    );
+  }, [htmlImageElements, imageURLs]);
+
   return (
     <Dropzone
       onDrop={(imageFile) => {
         removeBackground(imageFile, {
           onSuccess: (backgroundRemoved) => {
-            void (async () => {
-              const { current: canvas } = canvasRef;
-              if (canvas === null) {
-                return;
-              }
+            const { current: canvas } = canvasRef;
+            if (canvas === null) {
+              return;
+            }
 
-              const ctx = canvas.getContext('2d');
-              if (ctx === null) {
-                return;
-              }
+            const ctx = canvas.getContext('2d');
+            if (ctx === null) {
+              return;
+            }
 
-              const url = URL.createObjectURL(backgroundRemoved);
-              const image = await loadImage(url);
-              const halfFactor = 2;
-              const dx = canvas.width / halfFactor - image.width / halfFactor;
-              const dy = canvas.height / halfFactor - image.height / halfFactor;
-              ctx.drawImage(image, dx, dy, image.width, image.height);
-
-              URL.revokeObjectURL(url);
-            })();
+            const url = URL.createObjectURL(backgroundRemoved);
+            setImageURLs((prev) => [url, ...prev]);
           },
         });
       }}
@@ -56,15 +89,46 @@ export function Stage(): JSX.Element {
             canvasRef.current.height = height * dpr;
             canvasRef.current.style.maxWidth = `${width}px`;
             canvasRef.current.style.maxHeight = `${height}px`;
+
+            const context = canvasRef.current.getContext('2d');
+            if (context === null) {
+              return;
+            }
+
+            drawImages(
+              context,
+              htmlImageElements.filter((htmlImageElement) => htmlImageElement !== undefined),
+            );
           }}
         >
           {(() => {
             if (isDragActive) {
-              return <p>drop here!</p>;
+              return (
+                <div
+                  className={cn(
+                    'absolute left-0 top-0',
+                    'flex justify-center items-center',
+                    'w-full h-full',
+                    'bg-green-400 rounded',
+                  )}
+                >
+                  <UploadIcon color="white" />
+                </div>
+              );
             }
 
-            if (isRemoveBackgroundPending) {
-              return <p>loading...</p>;
+            if (isRemoveBackgroundPending || isLoadHTMLImageElementPending) {
+              return (
+                <div
+                  className={cn(
+                    'absolute left-0 top-0',
+                    'flex justify-center items-center',
+                    'w-full h-full',
+                  )}
+                >
+                  <Loader />
+                </div>
+              );
             }
 
             return null;
@@ -122,7 +186,7 @@ function StageWrapper({
     >
       <div
         ref={targetRef}
-        className="w-full h-full"
+        className={cn('relative', 'w-full h-full', 'rounded border border-gray-300')}
       >
         {children}
       </div>
