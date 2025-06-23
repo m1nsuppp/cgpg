@@ -1,5 +1,5 @@
 import type { JSX } from 'react';
 
 export function App(): JSX.Element {
-  return <></>;
+  return <p>hello, app!</p>;
 }
