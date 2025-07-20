@@ -32,8 +32,11 @@ export function helloWorld(): void {
   };
 
   animate(() => {
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
+    cube.rotation.z = (cube.rotation.z + 0.01) % (Math.PI * 2);
+    cube.rotation.y = (cube.rotation.y + 0.01) % (Math.PI * 2);
+
+    console.log(cube.rotation.z);
+
     renderer.render(scene, camera);
   });
 }

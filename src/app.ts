@@ -1,6 +1,5 @@
-import { createSolarSystem } from './solar-system';
+import { helloWorld } from './hello-world';
 
 (() => {
-  const solarSystem = createSolarSystem();
-  solarSystem.run();
+  helloWorld();
 })();
