@@ -32,10 +32,10 @@ export function helloWorld(): void {
   const cube = new THREE.Mesh(geometry, material);
   scene.add(cube);
 
-  camera1.position.z = 2;
+  camera1.position.z = 10;
   camera2.position.y = 2;
   camera2.lookAt(new THREE.Vector3(0, 0, 0));
-  camera3.position.z = 2;
+  camera3.position.z = -0.05;
   camera4.position.x = 2;
   camera4.lookAt(new THREE.Vector3(0, 0, 0));
 
