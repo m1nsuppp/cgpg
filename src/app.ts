@@ -1,6 +1,5 @@
-import { createCustomCamera } from './custom-camera';
+import { helloWorld } from './hello-world';
 
 (() => {
-  const { run } = createCustomCamera();
-  run();
+  helloWorld();
 })();
