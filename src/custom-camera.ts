@@ -34,10 +34,6 @@ export function createCustomCamera(): { run: () => void } {
 
       const camera = createCamera();
       camera.position.set(0, 1, 5);
-      const distance = cube.position.distanceTo(camera.position);
-
-      camera.near = distance - 0.5;
-      camera.updateProjectionMatrix();
 
       const renderer = new THREE.WebGLRenderer();
       renderer.setSize(window.innerWidth, window.innerHeight);
@@ -47,14 +43,15 @@ export function createCustomCamera(): { run: () => void } {
 
       const cursor: { x: number; y: number } = { x: 0, y: 0 };
 
-      window.addEventListener('wheel', () => {
-        camera.near = 0.1;
-        camera.updateProjectionMatrix();
-      });
+      window.addEventListener('mousemove', (event) => {
+        const relativeX = event.clientX / window.innerWidth;
+        const relativeY = event.clientY / window.innerHeight;
 
-      window.addEventListener('mousemove', (event: MouseEvent) => {
-        cursor.x = event.clientX / window.innerWidth - 0.5;
-        cursor.y = (event.clientY / window.innerHeight - 0.5) * -1;
+        const normalizedX = relativeX - 0.5;
+        const normalizedY = (relativeY - 0.5) * -1;
+
+        cursor.x = normalizedX;
+        cursor.y = normalizedY;
       });
 
       const animate = (callback: () => void): void => {
@@ -65,7 +62,6 @@ export function createCustomCamera(): { run: () => void } {
       };
 
       animate(() => {
-        console.log(cursor);
         camera.position.x = cursor.x;
         camera.position.y = cursor.y;
 
