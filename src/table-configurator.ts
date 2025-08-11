@@ -41,11 +41,30 @@ export function createTableConfigurator(): {
       scene.add(table);
 
       table.traverse((child) => {
-        console.log(child);
-        if (child.name === 'Legs02Right') {
-          child.scale.set(2, 1, 2);
+        if (
+          isMatEditableMesh(child) &&
+          (child.name === 'Legs02Right' ||
+            child.name === 'Legs03Right' ||
+            child.name === 'Legs02Left' ||
+            child.name === 'Legs03Left')
+        ) {
+          child.visible = false;
         }
       });
+
+      table.children
+        .filter((child) => child.visible)
+        .forEach((child) => {
+          if (
+            isMatEditableMesh(child) &&
+            (child.name === 'Legs01Right' || child.name === 'Legs01Left')
+          ) {
+            child.material.color.set('#00FF00');
+            child.material.metalness = 0.5;
+            // child.material.emissive.set('#003300');
+            // console.log(child.material);
+          }
+        });
 
       const animate = (): void => {
         requestAnimationFrame(animate);
@@ -56,3 +75,16 @@ export function createTableConfigurator(): {
     },
   };
 }
+
+const isMatEditableMesh = (
+  obj: THREE.Object3D,
+): obj is
+  | THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial | THREE.MeshPhysicalMaterial>
+  | THREE.InstancedMesh<
+      THREE.BufferGeometry,
+      THREE.MeshStandardMaterial | THREE.MeshPhysicalMaterial
+    > =>
+  obj instanceof THREE.Mesh ||
+  (obj instanceof THREE.InstancedMesh &&
+    (obj.material instanceof THREE.MeshStandardMaterial ||
+      obj.material instanceof THREE.MeshPhysicalMaterial));
