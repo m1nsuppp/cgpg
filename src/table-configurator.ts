@@ -29,10 +29,10 @@ export function createTableConfigurator(): {
       renderer.setSize(window.innerWidth, window.innerHeight);
       root.appendChild(renderer.domElement);
 
-      const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+      const ambientLight = new THREE.AmbientLight(0xffffff, 1.0); // 강도 높임
       scene.add(ambientLight);
 
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5); // 강도 높임
       directionalLight.position.set(5, 10, 7.5);
       scene.add(directionalLight);
 
@@ -59,10 +59,14 @@ export function createTableConfigurator(): {
             isMatEditableMesh(child) &&
             (child.name === 'Legs01Right' || child.name === 'Legs01Left')
           ) {
+            const { color, roughness, metalness } = child.material;
+            console.log({
+              color: color.getHex(),
+              roughness,
+              metalness,
+            });
             child.material.color.set('#00FF00');
-            child.material.metalness = 0.5;
-            // child.material.emissive.set('#003300');
-            // console.log(child.material);
+            child.material.roughness = 0.5;
           }
         });
 
