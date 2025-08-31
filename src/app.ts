@@ -1,6 +1,5 @@
-import { createTableConfigurator } from './table-configurator';
+import { runMovableBox } from './movable-box';
 
 (() => {
-  const configurator = createTableConfigurator();
-  void configurator.run();
+  runMovableBox();
 })();
