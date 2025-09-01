@@ -1,16 +1,201 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ko">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="./src/index.css" rel="stylesheet" />
-  <title>CGPG</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS 3D Transform 예제</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 50px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 50px;
+      flex-wrap: wrap;
+    }
+
+    /* 3D 카드 컨테이너 */
+    .card-container {
+      width: 200px;
+      height: 300px;
+      perspective: 1000px;
+      /* 3D 원근감 설정 */
+      cursor: pointer;
+    }
+
+    .card {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      /* 핵심! 3D 공간 보존 */
+      transition: transform 0.8s ease;
+    }
+
+    .card:hover {
+      transform: rotateY(180deg);
+      /* 호버시 뒤집기 */
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      /* 뒷면 숨기기 */
+      border-radius: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-front {
+      background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+      box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+    }
+
+    .card-back {
+      background: linear-gradient(45deg, #4834d4, #686de0);
+      transform: rotateY(180deg);
+      /* 뒷면은 미리 뒤집어 놓기 */
+      box-shadow: 0 10px 30px rgba(72, 52, 212, 0.3);
+    }
+
+    /* 3D 큐브 예제 */
+    .cube-container {
+      width: 150px;
+      height: 150px;
+      perspective: 800px;
+    }
+
+    .cube {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      /* 핵심! */
+      animation: rotate 4s infinite linear;
+    }
+
+    .cube-face {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 20px;
+      font-weight: bold;
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .front {
+      background: rgba(255, 99, 99, 0.8);
+      transform: translateZ(75px);
+    }
+
+    .back {
+      background: rgba(99, 255, 99, 0.8);
+      transform: rotateY(180deg) translateZ(75px);
+    }
+
+    .right {
+      background: rgba(99, 99, 255, 0.8);
+      transform: rotateY(90deg) translateZ(75px);
+    }
+
+    .left {
+      background: rgba(255, 255, 99, 0.8);
+      transform: rotateY(-90deg) translateZ(75px);
+    }
+
+    .top {
+      background: rgba(255, 99, 255, 0.8);
+      transform: rotateX(90deg) translateZ(75px);
+    }
+
+    .bottom {
+      background: rgba(99, 255, 255, 0.8);
+      transform: rotateX(-90deg) translateZ(75px);
+    }
+
+    @keyframes rotate {
+      from {
+        transform: rotateX(0) rotateY(0);
+      }
+
+      to {
+        transform: rotateX(360deg) rotateY(360deg);
+      }
+    }
+
+    .title {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-size: 28px;
+      font-weight: bold;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .info {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      text-align: center;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+  </style>
 </head>
 
 <body>
-  <div id="root" style="display: flex;"></div>
-  <script type="module" src="/src/app.ts"></script>
+  <div class="title">CSS 3D Transform 예제</div>
+
+  <!-- 카드 뒤집기 예제 -->
+  <div class="card-container">
+    <div class="card">
+      <div class="card-face card-front">
+        앞면<br>
+        <small style="font-size: 16px;">hover me!</small>
+      </div>
+      <div class="card-face card-back">
+        뒷면<br>
+        <small style="font-size: 16px;">success!</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3D 큐브 예제 -->
+  <div class="cube-container">
+    <div class="cube">
+      <div class="cube-face front">앞</div>
+      <div class="cube-face back">뒤</div>
+      <div class="cube-face right">우</div>
+      <div class="cube-face left">좌</div>
+      <div class="cube-face top">위</div>
+      <div class="cube-face bottom">아래</div>
+    </div>
+  </div>
+
+  <div class="info">
+    왼쪽 카드에 마우스를 올려보세요! 오른쪽은 자동으로 회전하는 큐브입니다.<br>
+    핵심은 <strong>transform-style: preserve-3d</strong> 속성입니다.
+  </div>
 </body>
 
 </html>
